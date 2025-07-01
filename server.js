@@ -8,6 +8,30 @@ const routers = require('./routers');
 const { /*rtmpAuthRouter,*/ arduinoSerialRouter, arduinoIOTRouter, commentsRouter, whatsappWebHookRouter } = routers;
 const { wsServer1 } = require('./sockets');
 
+
+const cors = require('cors');
+
+const allowedOrigins = [
+  'http://localhost:4001',
+  'https://arthur-zarankin.com',
+  'https://w3arthur.com',
+  'https://arthurcam.com'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // לא לכלול בקשות ללא origin (כמו curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
+
 //middleware:
 app.use(require("cookie-parser")());
 app.use(express.json());
